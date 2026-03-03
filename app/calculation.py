@@ -1,25 +1,18 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 
 
 @dataclass
 class Calculation:
-    """
-    Represents a single calculator operation.
-    Stores operation details and timestamp.
-    """
-
     operation: str
     operand1: float
     operand2: float
     result: float
-    timestamp: datetime = field(default_factory=datetime.now)
+    timestamp: datetime = datetime.now()
 
-    def to_dict(self) -> dict:
-        return {
-            "operation": self.operation,
-            "operand1": self.operand1,
-            "operand2": self.operand2,
-            "result": self.result,
-            "timestamp": self.timestamp.isoformat(),
-        }
+    def __str__(self):
+        return (
+            f"{self.operation.upper()} | "
+            f"{self.operand1} , {self.operand2} = {self.result} "
+            f"({self.timestamp.strftime('%Y-%m-%d %H:%M:%S')})"
+        )
