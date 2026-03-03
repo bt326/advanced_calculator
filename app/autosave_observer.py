@@ -6,25 +6,41 @@ from app.calculator_config import CalculatorConfig
 
 class AutoSaveObserver(Observer):
     """
-    Automatically saves calculation history to CSV.
+   saves full calculation history to CSV.
     """
 
-    def __init__(self):
+    def __init__(self, calculator):
         self.config = CalculatorConfig()
-        self.history_file = "calculator_history.csv"
+        self.calculator = calculator
+
+        self.history_dir = "history"
+        os.makedirs(self.history_dir, exist_ok=True)
+
+        self.history_file = os.path.join(
+            self.history_dir,
+            "calculator_history.csv"
+        )
 
     def update(self, calculation):
-        data = {
-            "operation": calculation.operation,
-            "operand1": calculation.operand1,
-            "operand2": calculation.operand2,
-            "result": calculation.result,
-            "timestamp": calculation.timestamp.isoformat(),
-        }
+        if not self.config.auto_save:
+            return
 
-        df = pd.DataFrame([data])
+        history_list = self.calculator.get_history()
 
-        if os.path.exists(self.history_file):
-            df.to_csv(self.history_file, mode="a", header=False, index=False)
-        else:
-            df.to_csv(self.history_file, index=False)
+        data = [
+            {
+                "operation": calc.operation,
+                "operand1": calc.operand1,
+                "operand2": calc.operand2,
+                "result": calc.result,
+                "timestamp": calc.timestamp.isoformat(),
+            }
+            for calc in history_list
+        ]
+
+        df = pd.DataFrame(data)
+        df.to_csv(
+            self.history_file,
+            index=False,
+            encoding=self.config.default_encoding
+        )
