@@ -19,3 +19,12 @@ def test_multiply():
 def test_divide():
     op = OperationFactory.create_operation("divide")
     assert op.execute(10, 2) == 5
+
+import pytest
+from app.exceptions import OperationError
+
+
+def test_divide_by_zero():
+    op = OperationFactory.create_operation("divide")
+    with pytest.raises(OperationError):
+        op.execute(10, 0)

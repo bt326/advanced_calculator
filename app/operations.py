@@ -1,3 +1,4 @@
+from app.exceptions import OperationError
 from abc import ABC, abstractmethod
 
 
@@ -25,7 +26,7 @@ class MultiplyOperation(Operation):
 class DivideOperation(Operation):
     def execute(self, a: float, b: float) -> float:
         if b == 0:
-            raise ValueError("Division by zero is not allowed.")
+            raise OperationError("Division by zero is not allowed.")
         return a / b
 
 
@@ -41,5 +42,5 @@ class OperationFactory:
     def create_operation(cls, operation_name: str):
         operation = cls.operations.get(operation_name)
         if not operation:
-            raise ValueError("Invalid operation")
+            raise OperationError("Invalid operation")
         return operation()
