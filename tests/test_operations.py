@@ -28,3 +28,7 @@ def test_divide_by_zero():
     op = OperationFactory.create_operation("divide")
     with pytest.raises(OperationError):
         op.execute(10, 0)
+
+def test_power():
+    op = OperationFactory.create_operation("power")
+    assert op.execute(2, 3) == 8

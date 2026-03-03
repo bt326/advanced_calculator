@@ -28,7 +28,10 @@ class DivideOperation(Operation):
         if b == 0:
             raise OperationError("Division by zero is not allowed.")
         return a / b
-
+        
+class PowerOperation(Operation):
+    def execute(self, a: float, b: float) -> float:
+        return a ** b
 
 class OperationFactory:
     operations = {
@@ -36,6 +39,7 @@ class OperationFactory:
         "subtract": SubtractOperation,
         "multiply": MultiplyOperation,
         "divide": DivideOperation,
+        "power": PowerOperation,
     }
 
     @classmethod
@@ -44,3 +48,4 @@ class OperationFactory:
         if not operation:
             raise OperationError("Invalid operation")
         return operation()
+
