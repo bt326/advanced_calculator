@@ -43,7 +43,8 @@ This project extends beyond basic arithmetic by integrating state management, lo
 - 51 unit tests
 - 100% test coverage
 - Edge-case and parameterized testing
-- CI pipeline with minimum 90% coverage enforcement
+- CI pipeline with minimum 90% coverage enforcement ..
+- i achieved 100% coverage 
 
 ---
 
