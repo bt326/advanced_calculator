@@ -1,25 +1,26 @@
 import os
 import pandas as pd
 from app.observer import Observer
-from app.calculator_config import CalculatorConfig
 
 
 class AutoSaveObserver(Observer):
     """
-   saves full calculation history to CSV.
+    Automatically saves full calculation history to CSV.
     """
 
-    def __init__(self, calculator):
-        self.config = CalculatorConfig()
+    def __init__(self, calculator, history_file=None):
         self.calculator = calculator
+        self.config = calculator.config  
 
-        self.history_dir = "history"
-        os.makedirs(self.history_dir, exist_ok=True)
-
-        self.history_file = os.path.join(
-            self.history_dir,
-            "calculator_history.csv"
-        )
+        if history_file:
+            self.history_file = history_file
+        else:
+            history_dir = "history"
+            os.makedirs(history_dir, exist_ok=True)
+            self.history_file = os.path.join(
+                history_dir,
+                "calculator_history.csv"
+            )
 
     def update(self, calculation):
         if not self.config.auto_save:
@@ -39,6 +40,11 @@ class AutoSaveObserver(Observer):
         ]
 
         df = pd.DataFrame(data)
+
+        directory = os.path.dirname(self.history_file)
+        if directory:
+            os.makedirs(directory, exist_ok=True)
+
         df.to_csv(
             self.history_file,
             index=False,

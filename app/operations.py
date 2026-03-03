@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 class Operation(ABC):
     @abstractmethod
     def execute(self, a: float, b: float) -> float:
-        pass
+        pass  # pragma: no cover
 
 
 class AddOperation(Operation):
@@ -29,20 +29,22 @@ class DivideOperation(Operation):
             raise OperationError("Division by zero is not allowed.")
         return a / b
 
+
 class PowerOperation(Operation):
     def execute(self, a: float, b: float) -> float:
         return a ** b
+
 
 class RootOperation(Operation):
     def execute(self, a: float, b: float) -> float:
         if b == 0:
             raise OperationError("Root degree cannot be zero.")
 
-        # Even root of negative number not allowed
         if a < 0 and b % 2 == 0:
             raise OperationError("Even root of negative number is not allowed.")
 
         return a ** (1 / b)
+
 
 class ModulusOperation(Operation):
     def execute(self, a: float, b: float) -> float:
@@ -69,6 +71,7 @@ class AbsoluteDifferenceOperation(Operation):
     def execute(self, a: float, b: float) -> float:
         return abs(a - b)
 
+
 class OperationFactory:
     operations = {
         "add": AddOperation,
@@ -89,4 +92,3 @@ class OperationFactory:
         if not operation:
             raise OperationError("Invalid operation")
         return operation()
-

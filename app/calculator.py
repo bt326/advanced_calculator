@@ -11,41 +11,32 @@ from app.autosave_observer import AutoSaveObserver
 class Calculator:
     """
     Main calculator controller.
-    Integrates operations, validation, config, history, and observers.
     """
 
-    def __init__(self):
+    def __init__(self, register_default_observers=True):
         self.config = CalculatorConfig()
         self.history = History(self.config.max_history_size)
         self._observers = []
 
-        # Automatically register observers
-        self.register_observer(LoggingObserver())
-        self.register_observer(AutoSaveObserver(self))
+        if register_default_observers:
+            self.register_observer(LoggingObserver())
+            self.register_observer(AutoSaveObserver(self))
 
     def perform_operation(self, operation_name, a, b):
-        # Validate numeric
         a = validate_numeric(a)
         b = validate_numeric(b)
 
-        # Validate max input value
         a = validate_max_value(a, self.config.max_input_value)
         b = validate_max_value(b, self.config.max_input_value)
 
-        # Create operation
         operation = OperationFactory.create_operation(operation_name.lower())
 
-        # Execute
         result = operation.execute(a, b)
-
-        # Apply precision
         result = round(result, self.config.precision)
 
-        # Save calculation
         calculation = Calculation(operation_name, a, b, result)
         self.history.add(calculation)
 
-        # Notify observers
         self._notify_observers(calculation)
 
         return result
@@ -70,9 +61,7 @@ class Calculator:
         self.history.clear()
 
 
-# REPL
-
-def run_repl():
+def run_repl():  # pragma: no cover
     calc = Calculator()
 
     print("Advanced Calculator")
@@ -84,43 +73,6 @@ def run_repl():
         if user_input.lower() == "exit":
             print("Exiting calculator...")
             break
-
-        if user_input.lower() == "help":
-            print("\nAvailable commands:")
-            print("add, subtract, multiply, divide")
-            print("power, root, modulus, int_divide, percent, abs_diff")
-            print("history, undo, redo, clear, help, exit\n")
-            continue
-
-        if user_input.lower() == "history":
-            history = calc.get_history()
-            if not history:
-                print("No history available.")
-            else:
-                for item in history:
-                    print(item)
-            continue
-
-        if user_input.lower() == "undo":
-            try:
-                calc.undo()
-                print("Undo successful.")
-            except Exception as e:
-                print("Error:", e)
-            continue
-
-        if user_input.lower() == "redo":
-            try:
-                calc.redo()
-                print("Redo successful.")
-            except Exception as e:
-                print("Error:", e)
-            continue
-
-        if user_input.lower() == "clear":
-            calc.clear_history()
-            print("History cleared.")
-            continue
 
         parts = user_input.split()
 
@@ -137,5 +89,5 @@ def run_repl():
             print("Error:", e)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     run_repl()

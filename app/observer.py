@@ -1,11 +1,6 @@
 from abc import ABC, abstractmethod
 
-
 class Observer(ABC):
-    """
-    Base observer class.
-    """
-
     @abstractmethod
     def update(self, calculation):
-        pass
+        pass  # pragma: no cover
