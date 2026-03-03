@@ -42,3 +42,22 @@ def test_root_zero_degree():
     op = OperationFactory.create_operation("root")
     with pytest.raises(OperationError):
         op.execute(10, 0)
+
+def test_modulus():
+    op = OperationFactory.create_operation("modulus")
+    assert op.execute(10, 3) == 1
+
+
+def test_integer_divide():
+    op = OperationFactory.create_operation("int_divide")
+    assert op.execute(10, 3) == 3
+
+
+def test_percent():
+    op = OperationFactory.create_operation("percent")
+    assert op.execute(50, 200) == 25
+
+
+def test_abs_diff():
+    op = OperationFactory.create_operation("abs_diff")
+    assert op.execute(3, 10) == 7
