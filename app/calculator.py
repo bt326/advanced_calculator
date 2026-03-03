@@ -1,3 +1,4 @@
+from app.observer import Observer
 from app.operations import OperationFactory
 from app.input_validators import validate_numeric, validate_max_value
 from app.calculation import Calculation
@@ -14,6 +15,7 @@ class Calculator:
     def __init__(self):
         self.config = CalculatorConfig()
         self.history = History(self.config.max_history_size)
+        self._observers = []
 
     def perform_operation(self, operation_name, a, b):
         # Validate numeric
@@ -37,7 +39,17 @@ class Calculator:
         calculation = Calculation(operation_name, a, b, result)
         self.history.add(calculation)
 
+        # Notify observers
+        self._notify_observers(calculation)
+
         return result
+
+    def register_observer(self, observer: Observer):
+        self._observers.append(observer)
+
+    def _notify_observers(self, calculation):
+        for observer in self._observers:
+            observer.update(calculation)
 
     def undo(self):
         self.history.undo()
