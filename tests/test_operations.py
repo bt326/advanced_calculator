@@ -32,3 +32,13 @@ def test_divide_by_zero():
 def test_power():
     op = OperationFactory.create_operation("power")
     assert op.execute(2, 3) == 8
+
+def test_root():
+    op = OperationFactory.create_operation("root")
+    assert round(op.execute(27, 3), 5) == 3
+
+
+def test_root_zero_degree():
+    op = OperationFactory.create_operation("root")
+    with pytest.raises(OperationError):
+        op.execute(10, 0)
